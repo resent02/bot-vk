@@ -40,8 +40,18 @@ def getlongPollThread():
         longPoll.lp_check()
         sleep(15*60)
 
-def writeMsg(peer_id, message):
-    pass
+
+def writeMsg(peer_id, text):
+    method = "messages.send"
+    random_id = random.randint(1, 2**31 - 1)
+    params = {
+        "peer_id": peer_id,
+        "random_id": random_id,
+        "message": text,
+        "oauth": 1,
+    }
+    return request(method, params)
+
 
 th = Th(target=getlongPollThread)
 th.start()
@@ -54,3 +64,4 @@ while True:
         print(event)
         if event['object']['text'] == "!start":
             print("New message")
+            writeMsg(event['object']['peer_id'], "Hello world!")
