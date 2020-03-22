@@ -4,11 +4,12 @@ import config
 import random
 from threading import Thread as Th
 from time import sleep
-import sqlite3 as sq
+from data import *
 
 
 def request(method, params):
-    url = f"https://api.vk.com/method/{method}/?access_token={config.TOKEN}&v=5.103"
+    apiUrl = "https://api.vk.com"
+    url = f"{apiUrl}/method/{method}/?access_token={config.TOKEN}&v=5.103"
     for key, value in params.items():
         if isinstance(value, (tuple, list)):
             params.update({key: ",".join(map(str, value))})
@@ -29,7 +30,7 @@ class LongPoll:
         self.key, self.server, self.ts = r.values()
 
     def genLink(self):
-         return f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait=0"
+        return f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait=0"
 
 longPoll = LongPoll()
 
@@ -56,12 +57,19 @@ def writeMsg(peer_id, text):
 th = Th(target=getlongPollThread)
 th.start()
 sleep(1)
+sql.init_db()
 
 while True:
     update = get(longPoll.genLink()).json()
     longPoll.ts = int(update['ts'])
     for event in update['updates']:
-        print(event)
-        if event['object']['text'] == "!start":
-            print("New message")
-            writeMsg(event['object']['peer_id'], "Hello world!")
+        event = event['object']
+        message = event['text']
+        if message == "!start":
+            writeMsg(event['peer_id'], "Команды:!name (ФИО)")
+        elif message.startswith("!name"):
+            print("message")
+            addName(f_id=event['peer_id'], name=message[6:])
+        elif message.startswith("!class"):
+            print("message class")
+            addClass(f_id=event['peer_id'], f_class=message[7:])
