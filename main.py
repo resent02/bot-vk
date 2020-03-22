@@ -73,3 +73,5 @@ while True:
         elif message.startswith("!class"):
             print("message class")
             addClass(f_id=event['peer_id'], f_class=message[7:])
+        elif message.startswith("!numb"):
+            numChoose(event['peer_id'], message[6:])
