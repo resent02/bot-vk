@@ -66,7 +66,10 @@ while True:
         event = event['object']
         message = event['text']
         if message == "!start":
-            writeMsg(event['peer_id'], "Команды:!name (ФИО)")
+            writeMsg(event['peer_id'], "Команды:\n!name (ФИО)\n!class (Число и буква)\n!numb (Номер услуги)\n!date (Название предмета и дата в формате ДД.ММ.ГГ)\nДля отправки заявки напишите !pull")
+            writeMsg(event['peer_id'], "После отправки заявки перечислите деньги с указанием в комментариях ваше ФИО! Иначе оценка не поставится!")
+            writeMsg(event['peer_id'], "Реквизиты:\nСбербанк - 4817 7602 0407 7915\nЛибо по номеру -89500605996")
+            writeMsg(event['peer_id'], "Пример:\n!name Иванов Иван Иванович\n!class 10Б\n!numb 4\n!date Математика 23.03.20")
         elif message.startswith("!name"):
             print("message")
             addName(f_id=event['peer_id'], name=message[6:])
@@ -75,3 +78,25 @@ while True:
             addClass(f_id=event['peer_id'], f_class=message[7:])
         elif message.startswith("!numb"):
             numChoose(event['peer_id'], message[6:])
+        elif message.startswith("!date"):
+            addDate(event['peer_id'], message[6:])
+        elif message.startswith('!заявки') and event['peer_id'] == 446700980:
+            print(getRequests())
+            if getRequests() == []:
+                writeMsg(event['peer_id'], "Заявок нету")
+            else:
+                for costRequest in getRequests():
+                    writeMsg(446700980, f"Айди пользователя:{costRequest[0]}\nИмя:{costRequest[1]}\nКласс:{costRequest[2]}\nНомер услуги:{costRequest[3]}\nПредмет и дата:{costRequest[4]}")
+        elif message.startswith('!pull'): # Отображение Текущих заявок!
+            for costRequest in getRequests():
+                if event['peer_id'] in costRequest:
+                    if None in costRequest:
+                        writeMsg(event['peer_id'], "Вы забыл заполнить поле\nВаша заявка выглядит вот так:")
+                        writeMsg(event['peer_id'], f"Имя:{costRequest[1]}\nКласс:{costRequest[2]}\nНомер услуги:{costRequest[3]}\nПредмет и дата:{costRequest[4]}")
+                    else:
+                        writeMsg(446700980, f"Айди пользователя:{costRequest[0]}\nИмя:{costRequest[1]}\nКласс:{costRequest[2]}\nНомер услуги:{costRequest[3]}\nПредмет и дата:{costRequest[4]}")
+        elif message.startswith('!delete') and event['peer_id'] == 446700980:
+            if delStr(message[8:]):
+                writeMsg(event['peer_id'], "Завяка удалена")
+            else:
+                writeMsg(event['peer_id'], "Заявка не удалена")
