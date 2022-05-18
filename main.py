@@ -68,7 +68,7 @@ while True:
         if message == "!start":
             writeMsg(event['peer_id'], "Команды:\n!name (ФИО)\n!class (Число и буква Номер школы)\n!numb (Номер услуги)\n!date (Название предмета и дата в формате ДД.ММ.ГГ)\nДля отправки заявки напишите !pull")
             writeMsg(event['peer_id'], "После отправки заявки перечислите деньги с указанием в комментариях ваше ФИО! Иначе оценка не поставится!")
-            writeMsg(event['peer_id'], "Реквизиты:\nСбербанк - 5469 0600 2619 1251")
+            writeMsg(event['peer_id'], "Реквизиты:\nСбербанк - ")
             writeMsg(event['peer_id'], "Пример:\n!name Иванов Иван Иванович\n!class 10Б 31\n!numb 4\n!date Математика 23.03.20")
             writeMsg(event['peer_id'], "Список услуг можно увидеть на стене группы")
         elif message.startswith("!name"):
@@ -81,7 +81,7 @@ while True:
             numChoose(event['peer_id'], message[6:])
         elif message.startswith("!date"):
             addDate(event['peer_id'], message[6:])
-        elif message.startswith('!заявки') and event['peer_id'] == 418060855:
+        elif message.startswith('!заявки') and event['peer_id'] == :
             print(getRequests())
             if getRequests() == []:
                 writeMsg(event['peer_id'], "Заявок нету")
